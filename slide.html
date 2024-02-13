@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="question-container">
+        <h1 class="question">YOU HAVE ACCEPTED THE AGREEMENT.</h1>
+        <h3 class="question" id="under-text">&#40;Slide the Milk bear to right. . .&#41;</h3>
+        <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+        <a href="letter.html"><button class="answer-button" id="giftButton">Continue</button></a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var slider = document.getElementById('myRange');
+            var button = document.getElementById('giftButton');
+
+            slider.oninput = function () {
+                if (this.value == 100) {
+                    button.classList.add("visible");
+                } else {
+                    button.classList.remove("visible");
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
