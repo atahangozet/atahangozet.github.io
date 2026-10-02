@@ -153,7 +153,7 @@ button{cursor:pointer}
 .lbl::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:12px;background:var(--ink-3)}
 .lbl.behind{opacity:.38}
 .lbl.behind:hover{opacity:1}
-.toast{position:absolute;top:52px;left:50%;transform:translateX(-50%);max-width:min(520px,calc(100% - 32px));padding:9px 14px;border-radius:8px;background:var(--ink);color:var(--panel);font-size:12.5px;z-index:6;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.toast{position:absolute;top:52px;left:50%;transform:translateX(-50%);max-width:min(520px,calc(100% - 32px));padding:9px 14px;border-radius:8px;background:var(--ink);color:var(--panel);font-size:12.5px;z-index:6;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none}
 .flowkey{position:absolute;top:48px;right:10px;display:flex;flex-direction:column;gap:3px;padding:7px 10px;border-radius:8px;background:var(--hud);border:1px solid var(--hud-line);font-size:11px;color:var(--ink-2);pointer-events:none}
 .flowkey i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
 .loading{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--ink-2);padding:24px}
@@ -230,6 +230,7 @@ button{cursor:pointer}
 .cl .val{font:12px var(--font-data);color:var(--ink-2);text-align:right}
 .box{border:1px solid var(--rule);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .box select{padding:5px 8px;border:1px solid var(--rule);border-radius:var(--r);background:var(--panel-2);max-width:100%}
+select.btn{height:28px}
 .result{margin:0;font-size:12.5px}
 .result.ok{color:var(--ok)} .result.bad{color:var(--warn)}
 
@@ -249,26 +250,141 @@ button{cursor:pointer}
 
 .mtabs{display:none}
 @media (max-width:1180px){ .work{grid-template-columns:232px minmax(0,1fr) 352px} }
-@media (max-width:900px){
-  .app{height:auto;display:block}
-  .bar{padding:10px 16px}
+/* Touch screens: finger-sized controls, and 16px form text so iOS doesn't zoom in on focus */
+@media (pointer:coarse){
+  html{touch-action:manipulation}
+  .stage{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  .hb{height:38px;border-radius:19px}
+  .hb svg,.tb svg{width:16px;height:16px}
+  .tb{height:38px;min-width:38px}
+  .modes button{padding:9px 14px}
+  .btn{height:38px}
+  .quick .btn{height:34px}
+  .keysw button{padding:12px 0}
+  .prow{grid-template-columns:36px minmax(0,1fr) auto;padding:1px 10px 1px 6px}
+  .eye{width:36px;height:36px}
+  .eye svg{width:17px;height:17px}
+  .pname-btn{padding:9px 2px}
+  .chips{gap:5px}
+  .chip{min-width:32px;height:32px;font-size:12px;line-height:30px}
+  .tray-item{padding:6px 10px}
+  .related button{padding:6px 11px}
+  .tdsteps li{padding:8px}
+  .lbl{padding:4px 8px}
+  .toggle{min-height:36px}
+  .toggle input{width:18px;height:18px}
+  input[type=range]{height:30px}
+  select,select.btn,input[type=search]{font-size:16px}
+  .hb select{align-self:stretch}
+  select.btn,.box select{height:38px}
+}
+
+/* Small screens: an app-style layout that never scrolls as a page. The 3D view and a tabbed
+   panel share the screen and the panel scrolls on its own, so a finger on the engine always
+   turns it and a tapped part's card is always in sight. */
+@media (max-width:900px), (max-height:500px){
+  html,body{overflow:hidden;overscroll-behavior:none}
+  .bar{padding:8px 12px;gap:8px 12px}
   .mark{font-size:22px}
-  .work{display:flex;flex-direction:column}
-  .stage{order:0} .mtabs{order:1} .side{order:2} .detail{order:3}
-  .stage{height:min(64svh,620px);min-height:380px}
-  .side,.detail{border:0;overflow:visible}
-  .side-head{position:static}
-  .mtabs{display:flex;position:sticky;top:0;z-index:4;background:var(--panel);border-bottom:1px solid var(--rule);padding:8px 16px;gap:6px}
-  .mtabs button{flex:1;height:32px;border:1px solid var(--rule);border-radius:var(--r);background:var(--panel-2);font-weight:700}
-  .mtabs button[aria-selected="true"]{background:var(--ink);color:var(--panel)}
+  .work{grid-template-columns:minmax(0,1fr)}
+  .stage{min-height:0}
+  .mtabs{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--rule)}
+  .mt-tabs{display:flex;gap:6px;flex:1;min-width:0}
+  .mt-tabs button{flex:1;height:36px;border:1px solid var(--rule);border-radius:var(--r);background:var(--panel-2);font-weight:700}
+  .mt-tabs button[aria-selected="true"]{background:var(--ink);color:var(--panel)}
+  .mt-size{display:none;place-items:center;flex:0 0 42px;height:36px;padding:0;border:1px solid var(--rule);border-radius:var(--r);background:var(--panel-2);color:var(--ink-2)}
+  .mt-size svg{width:16px;height:16px}
+  .mt-size[aria-pressed="true"] svg{transform:rotate(180deg)}
+  .side,.detail{border:0;overscroll-behavior:contain}
   .work[data-mt="parts"] .detail{display:none}
   .work[data-mt="detail"] .side{display:none}
-  .rng input{width:84px}
-  .angle,.lg-note{display:none}
-  .rng{letter-spacing:.02em}
+  /* readable panel text */
+  .pane{padding:14px 14px 24px}
+  .detail,.side{font-size:14.5px}
+  .pn{font-size:27px}
+  .plate h2{font-size:26px}
+  .tdcard h2{font-size:23px}
+  .specs,.narr,.cl li,.tdsteps li,.result,.try b{font-size:14px}
+  .pmeta,.specs dd,.blocked,.related button,.btn{font-size:13px}
+  .try span{font-size:12.5px}
+  .gnote{font-size:12px}
+  /* keep the teardown buttons in view while the panel scrolls */
+  #pane-teardown>.tdcard+.row{position:sticky;bottom:0;z-index:1;background:var(--panel);padding:8px 0;margin:-8px 0;box-shadow:0 -8px 14px var(--panel)}
+  /* run-up: instruments first, in one row, with the controls right under them */
+  #pane-runup>div:first-child{display:none}
+  #pane-runup .gauges{order:1;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:8px}
+  #pane-runup .ctl{order:2}
+  #narr{order:3}
+  #pane-runup>.sec{order:4}
+  #pane-runup .lims{order:5}
+  #pane-runup>.gnote{order:6}
+  #pane-runup>.row{order:7}
+  #pane-runup .box{order:8}
+  .g.big{grid-column:auto;grid-row:auto}
+  .g.big svg{max-width:150px}
+  /* stage chrome: icon-only HUD and a one-row dock; the dock has nothing to offer in the run-up */
   .hb .lbltxt{display:none}
-  .hb select{max-width:92px}
-  .hb{padding:0 8px}
+  .hb{padding:0 10px}
+  .hb select{max-width:96px}
+  .angle,.lg-note{display:none}
+  .transport{flex-wrap:nowrap;gap:6px}
+  .transport .rng{flex:1 1 0;min-width:0;display:grid;gap:0;font-size:9.5px}
+  .transport .rng input{width:100%;margin:0}
+  .transport .rng output{display:none}
+  .work[data-mode="runup"] .hud-b{display:none}
+}
+/* Keep the run-up narration in view while working the controls, where the screen is tall
+   enough for the mag switch to stay visible above it */
+@media (max-width:900px) and (min-height:640px), (max-height:500px){
+  #narr{position:sticky;bottom:0;z-index:1;box-shadow:0 -8px 14px var(--panel)}
+}
+/* Portrait: 3D view on top, panel below. The panel button trades 3D room for reading room,
+   leaving the engine as a preview strip. */
+@media (max-width:900px) and (min-height:501px){
+  .work{grid-template-rows:var(--stage-h,50%) auto minmax(0,1fr)}
+  .work[data-panel="big"]{--stage-h:24%}
+  .work[data-panel="big"][data-mode="runup"]{--stage-h:18%}
+  .stage{grid-row:1;grid-column:1}
+  .mtabs{grid-row:2;grid-column:1}
+  .side,.detail{grid-row:3;grid-column:1}
+  .mt-size{display:grid}
+  .work[data-panel="big"] .hud,.work[data-panel="big"] .flowkey{display:none}
+}
+/* Phones: two-row header, engines named by airplane only */
+@media (max-width:600px){
+  .bar{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center}
+  .brand{margin:0}
+  .sub{display:none}
+  .mark{font-size:20px}
+  .pick{justify-content:flex-end;flex-wrap:nowrap;gap:5px}
+  .eng{grid-template-columns:auto;justify-items:center;gap:0;padding:4px 8px}
+  .eng b{font-size:12.5px}
+  .eng i{font-size:10px}
+  .eng span{display:none}
+  .modes{grid-column:1/-1}
+  .modes button{flex:1}
+  .hb{padding:0 9px}
+  .hb select{max-width:76px}
+  #pane-runup .gauges{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #pane-runup .g svg{max-width:104px}
+}
+/* Landscape phones: 3D view on the left, panel on the right, one-row header */
+@media (max-height:500px){
+  .bar{padding:5px 12px;gap:6px 10px}
+  .sub{display:none}
+  .mark{font-size:19px}
+  .pick{gap:5px}
+  .eng{grid-template-columns:auto;padding:5px 9px}
+  .eng i,.eng span{display:none}
+  .modes button{padding:7px 12px}
+  .hb{padding:0 9px}
+  .hb select{max-width:76px}
+  .work{grid-template-columns:minmax(0,1fr) min(46%,380px);grid-template-rows:auto minmax(0,1fr)}
+  .work[data-mode="runup"]{grid-template-columns:minmax(0,1fr) min(64%,600px)}
+  .work[data-mode="runup"] .hud-t label.hb,.work[data-mode="runup"] #bGrab{display:none}
+  .stage{grid-row:1/-1;grid-column:1}
+  .mtabs{grid-row:1;grid-column:2;border-left:1px solid var(--rule)}
+  .side,.detail{grid-row:2;grid-column:2;border-left:1px solid var(--rule)}
 }
 @media (prefers-reduced-motion: reduce){ .prog i{transition:none} }
 </style>
@@ -292,7 +408,7 @@ button{cursor:pointer}
     </div>
   </header>
 
-  <main class="work" id="work" data-mt="detail">
+  <main class="work" id="work" data-mt="detail" data-mode="explore">
     <aside class="side" id="side" aria-label="Parts">
       <div class="side-head">
         <input id="q" type="search" placeholder="Find a part" aria-label="Find a part" autocomplete="off">
@@ -341,9 +457,12 @@ button{cursor:pointer}
       <div class="loading" id="loading"><div><b>Warming up the engine</b>Loading the 3D model…</div></div>
     </section>
 
-    <nav class="mtabs" role="tablist" aria-label="Panels">
-      <button role="tab" data-mt="detail" aria-selected="true">Details</button>
-      <button role="tab" data-mt="parts" aria-selected="false">Parts list</button>
+    <nav class="mtabs" aria-label="Panels">
+      <div class="mt-tabs" role="tablist" aria-label="Panel">
+        <button role="tab" data-mt="detail" aria-selected="true">Details</button>
+        <button role="tab" data-mt="parts" aria-selected="false">Parts list</button>
+      </div>
+      <button class="mt-size" id="bPanel" aria-pressed="false" aria-label="Expand panel" title="Expand panel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10 8 5.5l4.5 4.5"/></svg></button>
     </nav>
 
     <aside class="detail" id="detail" aria-label="Details">
@@ -2256,6 +2375,9 @@ const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(
 const cssColor = n => { const c = new THREE.Color(); try { c.setStyle(cssVar(n) || '#3377dd'); } catch (e) { c.set(0x3377dd); } return c; };
 const EYE = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/><circle cx="8" cy="8" r="2"/></svg>';
 const INTERNAL = new Set(['crank', 'rod', 'piston', 'rings', 'pin', 'cam', 'tappet', 'gears', 'oilpump', 'valveIn', 'valveEx']);
+const TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+// matches the CSS breakpoints where the 3D view and a tabbed panel share the screen
+const smallScreen = () => !!(window.matchMedia && window.matchMedia('(max-width: 900px), (max-height: 500px)').matches);
 const SHORT = { prop: 'Propeller', spinner: 'Spinner', starter: 'Starter', alternator: 'Alternator', ringgear: 'Ring gear', magL: 'Left magneto', magR: 'Right magneto', filter: 'Oil filter', cooler: 'Oil cooler', vacpump: 'Vacuum pump', carb: 'Carburetor', servo: 'Fuel servo', divider: 'Flow divider', muffler: 'Muffler', sump: 'Oil sump', acc: 'Accessory housing', caseR: 'Crankcase', cyl1: 'Cyl #1', cyl2: 'Cyl #2', cyl3: 'Cyl #3', cyl4: 'Cyl #4', dipstick: 'Oil filler', fuelpump: 'Fuel pump', crank: 'Crankshaft', cam: 'Camshaft', mount: 'Engine mount' };
 
 // ───── setup ─────
@@ -2513,8 +2635,8 @@ function endDrag() {
 function select(sel, toDetail = true) {
   S.sel = sel; applyHighlights(); refreshList();
   if (S.isolate) applyOpacity(true);
-  if (S.mode === 'explore') renderInfo();
-  if (toDetail && sel && window.innerWidth <= 900) setMobileTab('detail');
+  if (S.mode === 'explore') { renderInfo(); $('#detail').scrollTop = 0; }
+  if (toDetail && sel && smallScreen()) setMobileTab('detail');
 }
 function partMeta(p) {
   const E = M.E;
@@ -2584,13 +2706,15 @@ function overviewHTML(spec) {
       <button class="try" data-try="runup"><b>Do a run-up</b><span>Mag check, carb heat, practice faults</span></button>
       <button class="try" data-try="teardown"><b>Guided teardown</b><span>${TEARDOWN.length} steps, prop to crankshaft</span></button>
     </div></div>
-    <div class="sec"><h3>Getting around</h3><p>Drag to orbit, scroll or pinch to zoom, right-drag or two fingers to pan. Click any part for its card, double-click to zoom to it. Keys: Space play/pause, X x-ray, L labels, G pull parts, E explode, Esc clear.</p></div>
+    <div class="sec"><h3>Getting around</h3><p>${TOUCH
+      ? 'Drag one finger to orbit, pinch to zoom, drag two fingers to pan. Tap any part for its card.'
+      : 'Drag to orbit, scroll or pinch to zoom, right-drag or two fingers to pan. Click any part for its card, double-click to zoom to it. Keys: Space play/pause, X x-ray, L labels, G pull parts, E explode, Esc clear.'}</p></div>
     <p class="gnote">Figures come from Lycoming manuals and data sheets and from Cessna POH and checklist extracts. The POH for the specific airplane always governs.</p>`;
 }
 function bindTries(el) {
   el.querySelectorAll('[data-try]').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.try;
-    if (k === 'xray') { setXray(true); setPlaying(true); setSpeed(10); select({ kind: 'part', id: 'piston1' }); toast('Blue is fresh fuel-air charge, orange is the burn. Follow the firing order 1-3-2-4 in the strip below.', 6000); }
+    if (k === 'xray') { setXray(true); setPlaying(true); setSpeed(10); select({ kind: 'part', id: 'piston1' }); toast('Blue is fresh fuel-air charge, orange is the burn. ' + ($('#dock').dataset.min === 'true' ? 'Turn on the four-stroke chart below to follow the firing order 1-3-2-4.' : 'Follow the firing order 1-3-2-4 in the strip below.'), 6000); }
     if (k === 'pull') { setTool('grab'); select({ kind: 'part', id: 'cyl1' }); focusParts([M.parts.get('cyl1'), M.parts.get('piston1')]); toast('Pull parts is on. Drag cylinder 1 away from the case; its valves and rocker cover come with it.', 6000); }
     if (k === 'runup') setMode('runup');
     if (k === 'teardown') setMode('teardown');
@@ -2621,7 +2745,7 @@ function buildPartsList() {
 function seeInside(t) {
   if (!INTERNAL.has(t) || S.xray || S.section !== 'off' || S.explode > 0.3) return;
   if (!isIn(M.parts.get('caseR')) && !isIn(M.parts.get('caseL'))) return;
-  setXray(true); toast('That part is inside the engine, so X-ray is on. Press X to turn it off.', 3600);
+  setXray(true); toast(`That part is inside the engine, so X-ray is on. ${TOUCH ? 'Tap the X-ray button' : 'Press X'} to turn it off.`, 3600);
 }
 function refreshList() {
   if (!M) return;
@@ -2667,7 +2791,9 @@ function applySection() {
 }
 function setMode(m) {
   if (S.autoTD) { clearInterval(S.autoTD); S.autoTD = null; }
-  S.mode = m;
+  // on small screens the run-up's controls need the room more than the 3D view does
+  if (m !== S.mode) setPanelBig(m === 'runup');
+  S.mode = m; $('#work').dataset.mode = m;
   $$('.modes button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
   $('#pane-explore').hidden = m !== 'explore'; $('#pane-runup').hidden = m !== 'runup'; $('#pane-teardown').hidden = m !== 'teardown';
   $('#exp').disabled = m !== 'explore';
@@ -2680,9 +2806,10 @@ function setMode(m) {
   } else { audioStop(); S.sound = false; }
   if (m === 'teardown') { setPlaying(false); renderTeardown(); }
   if (m === 'explore') renderInfo();
-  if (window.innerWidth <= 900) setMobileTab('detail');
+  if (smallScreen()) setMobileTab('detail');
 }
-function setMobileTab(t) { $('#work').dataset.mt = t; $$('.mtabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mt === t))); }
+function setMobileTab(t) { $('#work').dataset.mt = t; $$('.mt-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mt === t))); }
+function setPanelBig(on) { $('#work').dataset.panel = on ? 'big' : ''; $('#bPanel').setAttribute('aria-pressed', String(on)); }
 let toastT = 0;
 function toast(msg, ms = 3400) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, ms); }
 
@@ -2690,7 +2817,8 @@ function bindUI() {
   bindPointer();
   $$('.eng').forEach(b => b.addEventListener('click', () => { if (b.dataset.eng !== S.eng) { loadEngine(b.dataset.eng); setMode(S.mode); } }));
   $$('.modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
-  $$('.mtabs button').forEach(b => b.addEventListener('click', () => setMobileTab(b.dataset.mt)));
+  $$('.mt-tabs button').forEach(b => b.addEventListener('click', () => setMobileTab(b.dataset.mt)));
+  $('#bPanel').addEventListener('click', () => setPanelBig($('#work').dataset.panel !== 'big'));
   $('#q').addEventListener('input', filterList);
   $('#strict').addEventListener('change', e => { S.strict = e.target.checked; if (S.mode === 'explore') renderInfo(); });
   $('#reassemble').addEventListener('click', () => { reinstallAll(); });
@@ -2948,7 +3076,7 @@ function buildRunup() {
       <div class="row">
         ${carb ? '<button class="btn" id="cHeat" aria-pressed="false">Carb heat: cold</button><button class="btn" id="cPrime">Prime</button>' : '<button class="btn" id="cPump" aria-pressed="false">Aux fuel pump: off</button>'}
         <button class="btn" id="cSound" aria-pressed="false">Sound: off</button>
-        <label class="rng" style="margin-left:auto">Slow-mo <select id="slowSel" class="btn" style="height:28px"><option value="20">1/20</option><option value="40" selected>1/40</option><option value="100">1/100</option><option value="400">1/400</option></select></label>
+        <label class="rng" style="margin-left:auto">Slow-mo <select id="slowSel" class="btn"><option value="20">1/20</option><option value="40" selected>1/40</option><option value="100">1/100</option><option value="400">1/400</option></select></label>
       </div>
     </div>
     <div class="narr" id="narr" role="status" aria-live="polite"></div>
